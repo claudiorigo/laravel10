@@ -287,20 +287,43 @@ resources/lang/es
 - [None] Add .gitignore (Choose which files not to track from a list of templates. Learn more about ignoring files.)
 - [None] Choose a license (A license tells others what they can and can't do with your code. Learn more about licenses.)
 - Create repository
-2.- git init                                (Los archivos y carpeta del proyecto cambiaran a color verde.)
-3.- git add .                               (Agrega todos los archivos, excepto los de .gitignore)
-4.- git commit -m "Deployment comienzo"     (Crea punto de guardado)
-5.- git branch -M main                      (Nos crea y nos mueve a la branch main, que antes era master)
-6.- git remote add origin https://github.com/claudiorigo/laravel10.git
-
-
-
-
+2.- git init                                                            (Los archivos y carpeta del proyecto cambiaran a color verde.)
+3.- git add .                                                           (Agrega todos los archivos, excepto los de .gitignore)
+4.- git commit -m "Deployment comienzo"                                 (Crea punto de guardado)
+5.- git branch -M main                                                  (Nos crea y nos mueve a la branch main, que antes era master)
+6.- git remote add origin https://github.com/claudiorigo/laravel10.git  (Con este link indicamos que este codigo pertenece a este repositorio)
+7.- git push -u origin main                                             (Subimos todo al branch de main)
 ---------------------------------------------------------------------------------------------------
 37. Introducción a Laravel Mix
-
----------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------
+# Verificamos que este instalado Node con eso tendremos disponible npm.
+node -v
+v18.8.0
+npm -v
+9.2.0
+# Otra manera de usar npm es usar yarn, pero mantengamos con node.
+npm install --global yarn
+# Para cargar las dependencias de "package.json" existen dos maneras de instalarlas y creara la carpeta node_modules en el proyecto.
+1.- Vía comando npm
+npm install
+2.- Vía comando yarn
+yarn
+# Para el nuevo CSS que quisieramos incorporar al final de resources/sass/app.css agregamos el código css y lo mismo para javascript resources/js/app.js 
+# Usa al final de todo el codigo alert('Hello World'); para javascrip y h1 {color: green} con css a modo de test que estan funcionando, luego compila esto se agregara en la compilación final que creara en la carpeta public del proyecto, public/build.
+# Para compilar las dependencias tambien existen las dos maneras, una vez termina, desde la versión Laravel 10 ocupara un compilador [vite] que refrescara automaticamente el navegador en tiempo real si cambias un codigo de color por ejemplo esto solo con dev.
+1.- La primera puede ser npm, igual puede quedar a la escucha con dev aunque si no lo hace cambiamos a watch, si no refleja cambios vaciar cache con F5.
+npm run dev
+npm run watch
+2.- La segundamanera de compilación puede ser por yarn, el watch lo usaremos solo si el dev no queda a a escucha de los cambios.
+yarn dev
+yarn watch
+# Para finalizar cuando ya tienes todo el código listo para producción es importante compilarlo así el codigo css o js el compilador lo minifica [CSS Minifier & Compressor] ósea lo deja en una línea de código.
+npm run build
+yarn buld
+npm run prod
+yarn prod
+# Para actualizar versión de bootstrap eliminamos y cargamos nuevamente solo para desarrollo con --dev, esto lo vemos en el archivo package.json del proyecto.
+yarn remove bootstrap
+yarn add bootstrap --dev
 ---------------------------------------------------------------------------------------------------
 php artisan config:clear
 php artisan cache:clear
@@ -311,3 +334,5 @@ php artisan config:cache
 
 php artisan optimize
 ---------------------------------------------------------------------------------------------------
+# Pasos Finales para subir a producción:
+npm run build
