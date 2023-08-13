@@ -1,4 +1,4 @@
------ Inicio de proyecto https://www.udemy.com/course/dominando-laravel-de-principiante-a-experto
+----- Inicio de proyecto
 # Crear Proyecto con Laravel 10 y PHP 8.1
 laravel new laravel10
 cd laravel10
@@ -51,9 +51,9 @@ resources/views/emails/message-received.blade.php
 # En MessagesController importamos las dos clases, la MessageReceived creada y el facade de Laravel Mail. Ya con esto enviamos correo al dueño de la web, recordar configurar archivo .env los datos del correo. (podemos usar log para test en el archivo .env así [BROADCAST_DRIVER=log] que nos mostrara en storage/logs/laravel.log)
 use App\Mail\MessageReceived;
 use Illuminate\Support\Facades\Mail;
-Mail::to('claudiorigo@gmail.com')->send(new MessageReceived);
+Mail::to('admin-web@gmail.com')->send(new MessageReceived);
 # Configuramos estos dos variables dentro de .env 
-MAIL_FROM_ADDRESS="adminweb@gmail.com"
+MAIL_FROM_ADDRESS="admin-web@gmail.com"
 MAIL_FROM_NAME="Admin Web"
 # Para cambiar el subject nos dirigimos a el archvio mailable app/Mail/MessageReceived.php usamos el 'metodo function envelope(): Envelope' con el asunto y test en el laravel.log.
 public $subject = 'Mensaje recibido'; // Para Laravel 9
@@ -69,14 +69,14 @@ public function __construct($msg){
     $this->msg = $msg;
 }
 # Recomendación usar queue en vez de send ya que los queue generan procesos en segundo plano para evitar que el usuario tenga que esperar que termine el proceso en este caso el email para obtener una respuesta, queue requiere una configuración adicional pero si no esta configurada usara send por defecto.
-Mail::to('claudiorigo@gmail.com')->queue(new MessageReceived($msg));
+Mail::to('admin-web@gmail.com')->queue(new MessageReceived($msg));
 # Lo más rapido para visualizar el contenido del correo es retornar una instancia del metodo meilable MessageReceived, solo este return alfinal
 return new MessageReceived($msg);
 # La otra opción es Mailtrap y configurar las variables de entornos en el archivo .env de nuestro proyecto.
 https://mailtrap.io/ 
 # Opcional  sendgrid con el plan gatiuto puesdes enviar 40 mil correos en los primeros 30 días ya luego 100 correos diarios por siempre.
 https://sendgrid.com/
-# Si bien Laravel no soporta Sendgrid existe una instalación via composer en github, dato en video udemy en el minuto 13 [21. Cómo enviar emails en Laravel]
+# Si bien Laravel no soporta Sendgrid existe una instalación via composer en github.
 https://github.com/s-ichikawa/laravel-sendgrid-driver
 ---------------------------------------------------------------------------------------------------
 # Crear Base de datos vía consola o terminal, -u es 'Usuario' y -p es 'Password' ejemplo: mysql -u root -p Ctx456Yhb como no tengo password lo dejamos en blanco.
@@ -167,6 +167,8 @@ Project::create($fields);
 @endif
 2.- Nos devuelve el primer error del campo asignado, con name="campo_asignado"
 {!! $errors->first('name', '<small>:message</small><br>') !!}
+3.- Con Bootstrap v5
+@error('name')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
 ---------------------------------------------------------------------------------------------------
 # Usar 'From Request Validation', pensado para validar formularios complejos. Osea las validaciones en otra class para que esten dedicados, como una interfaz.
 # Este se creara en la ruta app/Http/Requests/SaveProjectRequest.php y con el siguiente comando:
@@ -196,7 +198,8 @@ public function store(SaveProjectRequest $request)
 }
 ---------------------------------------------------------------------------------------------------
 # Comando para listar un route especifico.
-php artisan route:list --name=projects
+php artisan route:list --name=projects              //name('projects.index');
+php artisan route:list --path=portafolio            //get('/portfolio', [Controller, 'index'])
 ---------------------------------------------------------------------------------------------------
 # En este caso los 7 link creados podemos simplificarlos con Route::resource o utilizar de esta manerara.
 Route::get('/portfolio', [ProjectController::class, 'index'])->name('projects.index');
@@ -212,11 +215,7 @@ Route::resource('portafolio', ProjectController::class)->names('projects')->para
 # Mensajes de sesión o flask esto son utiles para almacenar un mensaje temporal en la sesión y enviarla a la vista, esta se almacenan en storage/framework/sessions.
 # Esta por defecto esta en 'file' aunque en producción es más rapido y preferible usar "memcached", "redis",
 ---------------------------------------------------------------------------------------------------
-# Ejercicio cache en el min 12 con 50 seg
-https://kinsta.com/es/blog/laravel-caching/
-https://www.youtube.com/watch?v=6eJMRMgn6mI&t=770s
----------------------------------------------------------------------------------------------------
-# 35. Agregando login y registro
+# Agregando login y registro
 composer require laravel/ui
 no // Esto no creara la nueva plantilla home y accedemos a login con http://laravel10.test/login
 php artisan ui vue --auth
@@ -287,14 +286,14 @@ resources/lang/es
 - [None] Add .gitignore (Choose which files not to track from a list of templates. Learn more about ignoring files.)
 - [None] Choose a license (A license tells others what they can and can't do with your code. Learn more about licenses.)
 - Create repository
-2.- git init                                                            (Los archivos y carpeta del proyecto cambiaran a color verde.)
-3.- git add .                                                           (Agrega todos los archivos, excepto los de .gitignore)
-4.- git commit -m "Deployment comienzo"                                 (Crea punto de guardado)
-5.- git branch -M main                                                  (Nos crea y nos mueve a la branch main, que antes era master)
-6.- git remote add origin https://github.com/claudiorigo/laravel10.git  (Con este link indicamos que este codigo pertenece a este repositorio)
-7.- git push -u origin main                                             (Subimos todo al branch de main)
+2.- git init                                                                (Los archivos y carpeta del proyecto cambiaran a color verde.)
+3.- git add .                                                               (Agrega todos los archivos, excepto los de .gitignore)
+4.- git commit -m "Deployment comienzo"                                     (Crea punto de guardado)
+5.- git branch -M main                                                      (Nos crea y nos mueve a la branch main, que antes era master)
+6.- git remote add origin https://github.com/claudiorigo/laravel10-v1.git   (Con este link indicamos que este codigo pertenece a este repositorio)
+7.- git push -u origin main                                                 (Subimos todo al branch de main)
 ---------------------------------------------------------------------------------------------------
-37. Introducción a Laravel Mix
+# Introducción a Laravel Mix
 # Verificamos que este instalado Node con eso tendremos disponible npm.
 node -v
 v18.8.0
@@ -336,3 +335,6 @@ php artisan optimize
 ---------------------------------------------------------------------------------------------------
 # Pasos Finales para subir a producción:
 npm run build
+git add .
+git commit -m "Frontend con Bootstrap 5"
+git push -u origin main
